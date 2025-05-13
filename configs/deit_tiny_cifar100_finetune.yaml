@@ -1,16 +1,17 @@
 MODEL:  
-  ANCESTRY: 'deit_small_patch16_224' # 'deit_small_attn4_ffn12'
+  ANCESTRY: 'deit_tiny_patch16_224' 
   TYPE: deit
-  NAME: deit_learngene_small
+  NAME: deit_learngene_tiny
+  NUM_CLASSES: 100
   DEIT:
-    EMBED_DIM: 384
-    DEPTHS: 12
-    NUM_HEADS: 6
-    NUM_HEADS_LEARNGENE: 4
-    NUM_HEADS_DESCENDANT: 6
+    EMBED_DIM: 192
+    DEPTHS: 6
+    NUM_HEADS: 3
+    NUM_HEADS_LEARNGENE: 2
+    NUM_HEADS_DESCENDANT: 3
   HDP:
     # HDP (str): whether to use HDP / which type to use, default='' meaning not using
-    HDP:  'qkv' # ''
+    HDP: 'qkv' # ''
     # HDP_RATIOS (list of int/float): how much to scale down hdp head count | only edit the first number
     HDP_RATIOS: [1.5, 1]  # To set up two linear layers, Linear(num_heads_descendant/HDP_RATIOS[0], num_heads_descendant/HDP_RATIOS[1]) and Linear(num_heads_descendant/HDP_RATIOS[1], num_heads_descendant)
     FFN_RATIOS: 2.0 # 1.3333
@@ -22,7 +23,11 @@ MODEL:
     
 DATA:
   # BATCH_SIZE (int): default=128
-  BATCH_SIZE: 200
+  BATCH_SIZE: 1200
+  DATASET: 'CIFAR100'
+  DATA_PATH: '/home/chk/datasets' 
+  IMG_SIZE: 32  # CIFAR100的图像尺寸为32x32
+
 TRAIN:
   # lr is for ebs=512, will scale linearly
   # default: warmup_lr (5e-7) -> base_lr (5e-4) -> min_lr (5e-6)
@@ -31,5 +36,13 @@ TRAIN:
   MIN_LR: 5e-6
   # WARMUP_EPOCHS (int): default=20
   WARMUP_EPOCHS: 5
+  EPOCHS: 100
 
-TAG : '4gpu_lr=5e-4_warm=5_attn4to6_ffn6to12_initialize_100epochs'
+AUG:
+  COLOR_JITTER: 0.3
+  AUTO_AUGMENT: 'rand-m9-mstd0.5-inc1'
+  REPROB: 0.25
+  MIXUP: 0.8
+  CUTMIX: 1.0
+
+TAG: 'CIFAR100_tiny_finetune' 

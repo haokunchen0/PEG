@@ -1,6 +1,8 @@
-
 import os
+import sys
 import torch
+import json
+import logging
 import numpy as np
 import torch.distributed as dist
 from timm.data import Mixup
@@ -9,8 +11,6 @@ from .cached_image_folder import CachedImageFolder
 from .samplers import SubsetRandomSampler
 
 import os.path
-import sys
-import json
 import pandas as pd
 import cv2
 
@@ -27,6 +27,15 @@ from timm.data import create_transform
 from pathlib import Path
 import PIL.Image
 from typing import Any, Callable, Optional, Tuple, TypeVar, Iterable
+
+# 添加这行代码来解决torch._six缺失的问题
+if not hasattr(torch, '_six'):
+    # 为新版本的PyTorch定义string_classes
+    torch._six = type('_six', (), {})
+    if sys.version_info[0] == 2:
+        torch._six.string_classes = basestring
+    else:
+        torch._six.string_classes = (str, bytes)
 
 try:
     from torchvision.transforms import InterpolationMode
