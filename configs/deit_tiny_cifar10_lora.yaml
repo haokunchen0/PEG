@@ -24,17 +24,16 @@ MODEL:
   # 添加LoRA相关配置
   LORA:
     ENABLED: True
-    RANK: 16   # LoRA矩阵的秩
-    ALPHA: 32.0  # LoRA的缩放因子
+    RANK: 8   # LoRA矩阵的秩
+    ALPHA: 16.0  # LoRA的缩放因子
     DROPOUT: 0.1  # LoRA的dropout率
-    TARGET_MODULES: ["attn", "mlp", "norm", "head"]  # 要应用LoRA的模块类型
+    TARGET_MODULES: ["attn", "mlp"]  # 要应用LoRA的模块类型
     
 DATA:
   # BATCH_SIZE (int): default=128
-  BATCH_SIZE: 1200
+  BATCH_SIZE: 1600
   DATASET: 'CIFAR10'
   DATA_PATH: '/home/chk/datasets' 
-  IMG_SIZE: 32  # CIFAR10的图像尺寸为32x32
 
 TRAIN:
   # lr is for ebs=512, will scale linearly
@@ -44,14 +43,5 @@ TRAIN:
   MIN_LR: 0.0001
   # WARMUP_EPOCHS (int): default=20
   WARMUP_EPOCHS: 10
-  WEIGHT_DECAY: 0.01
-  EPOCHS: 200
-
-AUG:
-  COLOR_JITTER: 0.3
-  AUTO_AUGMENT: 'rand-m9-mstd0.5-inc1'
-  REPROB: 0.25
-  MIXUP: 0.8
-  CUTMIX: 1.0
 
 TAG: 'CIFAR10_tiny_peg_lora' 
