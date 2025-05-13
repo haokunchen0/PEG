@@ -1,4 +1,3 @@
-
 import os
 import yaml
 from yacs.config import CfgNode as CN
@@ -55,6 +54,14 @@ _C.MODEL.DROP_RATE = 0.0
 _C.MODEL.DROP_PATH_RATE = 0.1
 # Label Smoothing
 _C.MODEL.LABEL_SMOOTHING = 0.1
+
+# LoRA parameters - 添加LoRA相关的配置
+_C.MODEL.LORA = CN()
+_C.MODEL.LORA.ENABLED = False
+_C.MODEL.LORA.RANK = 8
+_C.MODEL.LORA.ALPHA = 16.0
+_C.MODEL.LORA.DROPOUT = 0.0
+_C.MODEL.LORA.TARGET_MODULES = ["attn", "mlp"]
 
 # Swin Transformer parameters
 _C.MODEL.SWIN = CN()

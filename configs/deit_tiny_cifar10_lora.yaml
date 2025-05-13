@@ -2,6 +2,7 @@ MODEL:
   ANCESTRY: 'deit_tiny_patch16_224' 
   TYPE: deit
   NAME: deit_learngene_tiny
+  NUM_CLASSES: 10
   DEIT:
     EMBED_DIM: 192
     DEPTHS: 6
@@ -19,20 +20,38 @@ MODEL:
     # NON_LINEAR (bool): whether to use ReLU and multi HDP layers 
     NON_LINEAR: True
     DISTRIBUTION: 'Gaussian-Layer' # Uniform
+  
+  # 添加LoRA相关配置
+  LORA:
+    ENABLED: True
+    RANK: 16   # LoRA矩阵的秩
+    ALPHA: 32.0  # LoRA的缩放因子
+    DROPOUT: 0.1  # LoRA的dropout率
+    TARGET_MODULES: ["attn", "mlp", "norm", "head"]  # 要应用LoRA的模块类型
     
 DATA:
   # BATCH_SIZE (int): default=128
-  BATCH_SIZE: 800
-  DATASET: 'CIFAR100'
+  BATCH_SIZE: 1200
+  DATASET: 'CIFAR10'
   DATA_PATH: '/home/chk/datasets' 
-  
+  IMG_SIZE: 32  # CIFAR10的图像尺寸为32x32
+
 TRAIN:
   # lr is for ebs=512, will scale linearly
   # default: warmup_lr (5e-7) -> base_lr (5e-4) -> min_lr (5e-6)
-  BASE_LR:  5e-4  
-  WARMUP_LR: 5e-7
-  MIN_LR: 5e-6
+  BASE_LR: 0.002
+  WARMUP_LR: 0.005
+  MIN_LR: 0.0001
   # WARMUP_EPOCHS (int): default=20
   WARMUP_EPOCHS: 10
+  WEIGHT_DECAY: 0.01
+  EPOCHS: 200
 
-TAG: 'CIFAR100_tiny_finetune' 
+AUG:
+  COLOR_JITTER: 0.3
+  AUTO_AUGMENT: 'rand-m9-mstd0.5-inc1'
+  REPROB: 0.25
+  MIXUP: 0.8
+  CUTMIX: 1.0
+
+TAG: 'CIFAR10_tiny_peg_lora' 
